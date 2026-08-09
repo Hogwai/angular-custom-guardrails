@@ -1,0 +1,24 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "rootDir": ".",
+    "sourceMap": true,
+    "declaration": false,
+    "moduleResolution": "bundler",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "target": "es2015",
+    "module": "esnext",
+    "lib": ["es2020", "dom"],
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "paths": {
+      "@org/max-pipe-depth": ["./libs/max-pipe-depth/src/index.ts"],
+      "@org/no-nested-subscribe": ["./libs/no-nested-subscribe/src/index.ts"],
+      "@org/no-index-track": ["./libs/no-index-track/src/index.ts"],
+      "@org/no-absolute-scss-url": ["./libs/no-absolute-scss-url/src/index.ts"]
+    }
+  },
+  "exclude": ["node_modules", "tmp"]
+}

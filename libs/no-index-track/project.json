@@ -1,0 +1,19 @@
+{
+  "name": "no-index-track",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/no-index-track/src",
+  "projectType": "library",
+  "tags": ["type:guardrail"],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/no-index-track",
+        "main": "libs/no-index-track/src/index.ts",
+        "tsConfig": "libs/no-index-track/tsconfig.lib.json",
+        "assets": ["libs/no-index-track/*.md"]
+      }
+    }
+  }
+}

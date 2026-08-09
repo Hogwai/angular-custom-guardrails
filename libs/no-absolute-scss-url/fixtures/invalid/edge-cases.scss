@@ -1,0 +1,9 @@
+.spaces { background: url(  '/assets/spaces.svg'  ); }
+.unquoted { background: url(/assets/unquoted.svg); }
+.multiline {
+  background:
+    url(
+      '/assets/multiline.svg'
+    );
+}
+.comment { background: url( /* ignore */ '/assets/commented.svg' ); }

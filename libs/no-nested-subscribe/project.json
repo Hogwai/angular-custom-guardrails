@@ -1,0 +1,19 @@
+{
+  "name": "no-nested-subscribe",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/no-nested-subscribe/src",
+  "projectType": "library",
+  "tags": ["type:guardrail"],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/no-nested-subscribe",
+        "main": "libs/no-nested-subscribe/src/index.ts",
+        "tsConfig": "libs/no-nested-subscribe/tsconfig.lib.json",
+        "assets": ["libs/no-nested-subscribe/*.md"]
+      }
+    }
+  }
+}

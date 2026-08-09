@@ -1,0 +1,19 @@
+{
+  "name": "max-pipe-depth",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/max-pipe-depth/src",
+  "projectType": "library",
+  "tags": ["type:guardrail"],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/max-pipe-depth",
+        "main": "libs/max-pipe-depth/src/index.ts",
+        "tsConfig": "libs/max-pipe-depth/tsconfig.lib.json",
+        "assets": ["libs/max-pipe-depth/*.md"]
+      }
+    }
+  }
+}

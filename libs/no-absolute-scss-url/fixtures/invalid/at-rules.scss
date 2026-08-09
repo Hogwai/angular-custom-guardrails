@@ -1,0 +1,5 @@
+@import '/assets/theme.css';
+@use '/assets/tokens';
+.hero {
+  background: URL('/assets/hero.jpg');
+}
