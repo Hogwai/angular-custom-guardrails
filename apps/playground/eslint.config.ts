@@ -2,6 +2,9 @@ import nx from '@nx/eslint-plugin';
 import { rule as maxPipeDepth } from './tools/angular-guardrails/max-pipe-depth';
 import { rule as noIndexTrack } from './tools/angular-guardrails/no-index-track';
 import { rule as noNestedSubscribe } from './tools/angular-guardrails/no-nested-subscribe';
+import { rule as noDuplicateAsyncPipe } from './tools/angular-guardrails/no-duplicate-async-pipe';
+import { rule as noSubscribeInTemplateEvents } from './tools/angular-guardrails/no-subscribe-in-template-events';
+import { rule as noUselessEmptyNgTemplate } from './tools/angular-guardrails/no-useless-empty-ng-template';
 import baseConfig from '../../eslint.config.mjs';
 import templateParser from '@angular-eslint/template-parser';
 import tsParser from '@typescript-eslint/parser';
@@ -16,6 +19,9 @@ const customGuardrails = {
     'max-pipe-depth': maxPipeDepth,
     'no-index-track': noIndexTrack,
     'no-nested-subscribe': noNestedSubscribe,
+    'no-duplicate-async-pipe': noDuplicateAsyncPipe,
+    'no-subscribe-in-template-events': noSubscribeInTemplateEvents,
+    'no-useless-empty-ng-template': noUselessEmptyNgTemplate,
   },
 };
 
@@ -71,6 +77,9 @@ export default [
     },
     rules: {
       'custom-guardrails/no-index-track': 'error',
+      'custom-guardrails/no-duplicate-async-pipe': 'error',
+      'custom-guardrails/no-subscribe-in-template-events': 'error',
+      'custom-guardrails/no-useless-empty-ng-template': 'error',
     },
   },
 ];

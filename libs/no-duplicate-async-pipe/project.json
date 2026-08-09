@@ -1,0 +1,19 @@
+{
+  "name": "no-duplicate-async-pipe",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/no-duplicate-async-pipe/src",
+  "projectType": "library",
+  "tags": ["type:guardrail"],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/no-duplicate-async-pipe",
+        "main": "libs/no-duplicate-async-pipe/src/index.ts",
+        "tsConfig": "libs/no-duplicate-async-pipe/tsconfig.lib.json",
+        "assets": ["libs/no-duplicate-async-pipe/*.md"]
+      }
+    }
+  }
+}

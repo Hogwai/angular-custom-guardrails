@@ -1,6 +1,6 @@
 # Angular Custom Guard Rails
 
-A self-contained Angular/Nx showcase demonstrating four independently testable custom guard rails for code quality enforcement.
+A self-contained Angular/Nx showcase demonstrating seven independently testable custom guard rails for code quality enforcement.
 
 ## Prerequisites
 
@@ -14,14 +14,20 @@ graph TD
     A[apps/playground] --> C["apps/playground/tools/angular-guardrails/max-pipe-depth"]
     A --> D["apps/playground/tools/angular-guardrails/no-nested-subscribe"]
     A --> E["apps/playground/tools/angular-guardrails/no-index-track"]
+    A --> I["apps/playground/tools/angular-guardrails/no-duplicate-async-pipe"]
+    A --> J["apps/playground/tools/angular-guardrails/no-subscribe-in-template-events"]
+    A --> K["apps/playground/tools/angular-guardrails/no-useless-empty-ng-template"]
     F[libs/no-absolute-scss-url] --> G[fixtures/]
     F -.-> H[CLI checker]
 ```
 
-- **playground** : Angular app that complies with all four guard rails; consumes the three ESLint rules from its own standalone copies under `tools/angular-guardrails`, exactly like an application that copied the rules into its own source tree
+- **playground** : Angular app that complies with all seven guard rails; consumes the six ESLint rules from its own standalone copies under `tools/angular-guardrails`, exactly like an application that copied the rules into its own source tree
 - **max-pipe-depth** : ESLint rule limiting RxJS pipe operator count
 - **no-nested-subscribe** : ESLint rule forbidding subscribe inside subscribe
 - **no-index-track** : Angular template ESLint rule forbidding `track $index`
+- **no-duplicate-async-pipe** : Angular template ESLint rule forbidding repeated `async` pipes on the same expression within a template scope
+- **no-subscribe-in-template-events** : Angular template ESLint rule forbidding `subscribe()` calls inside template event handlers
+- **no-useless-empty-ng-template** : Angular template ESLint rule forbidding empty `ng-template` elements without content or template metadata
 - **no-absolute-scss-url** : Standalone CLI checker for absolute URLs in SCSS
 
 ## Tech Stack
@@ -74,6 +80,9 @@ npx nx run-many -t lint
 npx nx test max-pipe-depth
 npx nx test no-nested-subscribe
 npx nx test no-index-track
+npx nx test no-duplicate-async-pipe
+npx nx test no-subscribe-in-template-events
+npx nx test no-useless-empty-ng-template
 npx nx test no-absolute-scss-url
 ```
 
@@ -94,12 +103,18 @@ The playground consumes each rule from its own local copy:
 import { rule as maxPipeDepth } from './tools/angular-guardrails/max-pipe-depth';
 import { rule as noNestedSubscribe } from './tools/angular-guardrails/no-nested-subscribe';
 import { rule as noIndexTrack } from './tools/angular-guardrails/no-index-track';
+import { rule as noDuplicateAsyncPipe } from './tools/angular-guardrails/no-duplicate-async-pipe';
+import { rule as noSubscribeInTemplateEvents } from './tools/angular-guardrails/no-subscribe-in-template-events';
+import { rule as noUselessEmptyNgTemplate } from './tools/angular-guardrails/no-useless-empty-ng-template';
 
 const customGuardrails = {
   rules: {
     'max-pipe-depth': maxPipeDepth,
     'no-nested-subscribe': noNestedSubscribe,
     'no-index-track': noIndexTrack,
+    'no-duplicate-async-pipe': noDuplicateAsyncPipe,
+    'no-subscribe-in-template-events': noSubscribeInTemplateEvents,
+    'no-useless-empty-ng-template': noUselessEmptyNgTemplate,
   },
 };
 
@@ -116,7 +131,12 @@ export default [
   {
     files: ['**/*.html'],
     plugins: { 'custom-guardrails': customGuardrails },
-    rules: { 'custom-guardrails/no-index-track': 'error' },
+    rules: {
+      'custom-guardrails/no-index-track': 'error',
+      'custom-guardrails/no-duplicate-async-pipe': 'error',
+      'custom-guardrails/no-subscribe-in-template-events': 'error',
+      'custom-guardrails/no-useless-empty-ng-template': 'error',
+    },
   },
 ];
 ```
@@ -225,6 +245,44 @@ Angular template rule that flags bare `track $index` in `@for` loops, encouragin
 @for (user of users; track $index) { <p>{{ user.name }}</p> }
 ```
 
+### `no-duplicate-async-pipe`
+
+Angular template rule that flags every `async` pipe whose input expression is already piped with `async` earlier in the same template scope. Each occurrence spawns its own subscription with its own lifecycle; aliasing the result once avoids the double subscription.
+
+```html
+<!-- Valid: alias the observable result once -->
+@let user = user$ | async;
+<p>{{ user.name }}</p>
+
+<!-- Invalid: two async pipes on the same observable -->
+<p>{{ user$ | async }}</p>
+<p>{{ user$ | async }}</p>
+```
+
+### `no-subscribe-in-template-events`
+
+Angular template rule that disallows calling `subscribe` on an observable inside a template event handler (`(click)="..."`, ...). Subscribing in an event handler starts a subscription with no lifecycle tied to the view; delegate the operation to the component instead.
+
+```html
+<!-- Valid: delegate the subscription to a component method -->
+<button (click)="loadUsers()">Load</button>
+
+<!-- Invalid: subscribing inside an event handler -->
+<button (click)="users$.subscribe()">Load</button>
+```
+
+### `no-useless-empty-ng-template`
+
+Angular template rule that disallows empty `<ng-template>` elements that carry neither content nor template metadata (references, variables, attributes, bindings). Such a template renders nothing and is dead weight in the source.
+
+```html
+<!-- Valid: template with content and a reference for ngTemplateOutlet -->
+<ng-template #userCard><p>{{ user.name }}</p></ng-template>
+
+<!-- Invalid: empty template without content or metadata -->
+<ng-template></ng-template>
+```
+
 ### `no-absolute-scss-url`
 
 Standalone CLI checker that flags absolute paths in SCSS `url()` declarations. Uses PostCSS SCSS parser for accurate AST analysis.
@@ -244,6 +302,9 @@ Standalone CLI checker that flags absolute paths in SCSS `url()` declarations. U
 | [`libs/max-pipe-depth/src/rule.ts`](libs/max-pipe-depth/src/rule.ts) | RxJS pipe depth rule implementation |
 | [`libs/no-nested-subscribe/src/rule.ts`](libs/no-nested-subscribe/src/rule.ts) | Nested subscribe rule implementation |
 | [`libs/no-index-track/src/rule.ts`](libs/no-index-track/src/rule.ts) | Template $index tracking rule |
+| [`libs/no-duplicate-async-pipe/src/rule.ts`](libs/no-duplicate-async-pipe/src/rule.ts) | Duplicate async pipe rule implementation |
+| [`libs/no-subscribe-in-template-events/src/rule.ts`](libs/no-subscribe-in-template-events/src/rule.ts) | Subscribe in template events rule implementation |
+| [`libs/no-useless-empty-ng-template/src/rule.ts`](libs/no-useless-empty-ng-template/src/rule.ts) | Empty ng-template rule implementation |
 | [`libs/no-absolute-scss-url/src/check.ts`](libs/no-absolute-scss-url/src/check.ts) | SCSS URL checker + CLI entry point |
 | [`apps/playground/eslint.config.ts`](apps/playground/eslint.config.ts) | Playground ESLint flat config composing the rules locally with TypeScript parser services |
 | [`vitest.workspace.ts`](vitest.workspace.ts) | Vitest workspace configuration |
