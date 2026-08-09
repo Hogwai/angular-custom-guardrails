@@ -1,0 +1,16 @@
+{
+  "name": "@org/no-useless-empty-ng-template",
+  "version": "0.0.1",
+  "private": true,
+  "type": "commonjs",
+  "main": "./src/index.js",
+  "types": "./src/index.d.ts",
+  "dependencies": {
+    "@angular/compiler": "22.0.6",
+    "tslib": "^2.3.0"
+  },
+  "peerDependencies": {
+    "@angular-eslint/utils": "*",
+    "@typescript-eslint/utils": "*"
+  }
+}

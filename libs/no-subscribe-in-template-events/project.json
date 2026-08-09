@@ -1,0 +1,19 @@
+{
+  "name": "no-subscribe-in-template-events",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/no-subscribe-in-template-events/src",
+  "projectType": "library",
+  "tags": ["type:guardrail"],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/no-subscribe-in-template-events",
+        "main": "libs/no-subscribe-in-template-events/src/index.ts",
+        "tsConfig": "libs/no-subscribe-in-template-events/tsconfig.lib.json",
+        "assets": ["libs/no-subscribe-in-template-events/*.md"]
+      }
+    }
+  }
+}

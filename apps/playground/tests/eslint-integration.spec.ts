@@ -22,6 +22,22 @@ const TRACK_INDEX_TEMPLATE = [
   '',
 ].join('\n');
 
+const DUPLICATE_ASYNC_PIPE_TEMPLATE = [
+  '<p>{{ user$ | async }}</p>',
+  '<p>{{ user$ | async }}</p>',
+  '',
+].join('\n');
+
+const SUBSCRIBE_IN_TEMPLATE_EVENT_TEMPLATE = [
+  '<button (click)="users$.subscribe()">Load</button>',
+  '',
+].join('\n');
+
+const USELESS_EMPTY_NG_TEMPLATE = [
+  '<ng-template></ng-template>',
+  '',
+].join('\n');
+
 describe('playground ESLint integration', () => {
   it(
     'loads the playground config without errors',
@@ -59,6 +75,13 @@ describe('playground ESLint integration', () => {
     });
     const config = await eslint.calculateConfigForFile('test.html');
     expect(config.rules).toHaveProperty('custom-guardrails/no-index-track');
+    expect(config.rules).toHaveProperty('custom-guardrails/no-duplicate-async-pipe');
+    expect(config.rules).toHaveProperty(
+      'custom-guardrails/no-subscribe-in-template-events',
+    );
+    expect(config.rules).toHaveProperty(
+      'custom-guardrails/no-useless-empty-ng-template',
+    );
   });
 
   it(
@@ -96,6 +119,72 @@ describe('playground ESLint integration', () => {
         expect.arrayContaining([
           expect.objectContaining({
             ruleId: 'custom-guardrails/no-index-track',
+          }),
+        ]),
+      );
+    },
+    180000,
+  );
+
+  it(
+    'reports duplicate async pipes in HTML templates through the playground configuration',
+    async () => {
+      const eslint = new ESLint({
+        overrideConfigFile: CONFIG_PATH,
+      });
+      const [result] = await eslint.lintText(DUPLICATE_ASYNC_PIPE_TEMPLATE, {
+        filePath: APP_HTML_PATH,
+      });
+
+      expect(result.messages).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            ruleId: 'custom-guardrails/no-duplicate-async-pipe',
+          }),
+        ]),
+      );
+    },
+    180000,
+  );
+
+  it(
+    'reports subscribe calls in template event handlers through the playground configuration',
+    async () => {
+      const eslint = new ESLint({
+        overrideConfigFile: CONFIG_PATH,
+      });
+      const [result] = await eslint.lintText(
+        SUBSCRIBE_IN_TEMPLATE_EVENT_TEMPLATE,
+        {
+          filePath: APP_HTML_PATH,
+        },
+      );
+
+      expect(result.messages).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            ruleId: 'custom-guardrails/no-subscribe-in-template-events',
+          }),
+        ]),
+      );
+    },
+    180000,
+  );
+
+  it(
+    'reports useless empty ng-template elements through the playground configuration',
+    async () => {
+      const eslint = new ESLint({
+        overrideConfigFile: CONFIG_PATH,
+      });
+      const [result] = await eslint.lintText(USELESS_EMPTY_NG_TEMPLATE, {
+        filePath: APP_HTML_PATH,
+      });
+
+      expect(result.messages).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            ruleId: 'custom-guardrails/no-useless-empty-ng-template',
           }),
         ]),
       );
