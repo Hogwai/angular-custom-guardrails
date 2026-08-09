@@ -39,8 +39,8 @@ exactly `subscribe` is reported, at any nesting depth:
 <p>{{ users$.subscribe() }}</p>
 ```
 
-A bare `subscribe()` call — whose member access wraps an implicit receiver
-— is never reported: without a receiver it may be a business action on the
+A bare `subscribe()` call (whose member access wraps an implicit receiver
+) is never reported: without a receiver it may be a business action on the
 component.
 
 ## Detection
@@ -52,11 +52,11 @@ AST node invokes the matching visitor callback, so the rule never relies on
 module copy (the template parser instantiates its own bundled compiler).
 A call is reported when its callee dispatches as a member access
 (`PropertyRead` or `SafePropertyRead`) named exactly `subscribe` whose own
-receiver is not an implicit receiver — i.e. `users$.subscribe()`,
+receiver is not an implicit receiver, i.e. `users$.subscribe()`,
 `users$?.subscribe()`, `users$.subscribe?.()`, `this.users$.subscribe(...)`,
 or any of those nested inside another call. A `subscribe` that is only
-read, never called — `stream.subscribe?.other()`,
-`factory(stream.subscribe)()` — is never reported: the callee itself must
+read, never called, `stream.subscribe?.other()`,
+`factory(stream.subscribe)()`, is never reported: the callee itself must
 be the `subscribe` member access.
 
 The rule has no configuration: it always inspects every event handler.

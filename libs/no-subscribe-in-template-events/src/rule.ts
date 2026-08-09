@@ -21,7 +21,7 @@ type SubscribeCallNode = (Call | SafeCall) & {
 
 /**
  * Non-recursive probe: dispatches a single expression node and records what
- * that node is — a member access named exactly `subscribe` (`PropertyRead`
+ * that node is: a member access named exactly `subscribe` (`PropertyRead`
  * or `SafePropertyRead`) or an `ImplicitReceiver`. The node itself invokes
  * the matching visitor method (`node.visit(probe)`), so the probe never
  * relies on `constructor.name` strings nor on `instanceof` against a
@@ -31,7 +31,7 @@ type SubscribeCallNode = (Call | SafeCall) & {
  *
  * Only the outermost dispatch may answer: `visit` tracks the dispatch depth
  * and the recorded answers are ignored below it, so probing a node never
- * descends into its children — without the guard, `RecursiveAstVisitor`
+ * descends into its children; without the guard, `RecursiveAstVisitor`
  * would walk down a member chain and report the implicit receiver at its
  * root, or report a `subscribe` that is merely read (e.g. as the receiver
  * of another member access, or as an argument of an inner call) instead of
@@ -86,7 +86,7 @@ class ReceiverProbe extends RecursiveAstVisitor {
  * `users$?.subscribe()`, `users$.subscribe?.()`,
  * `this.users$.subscribe(...)`, `service.users$.subscribe(...)`, or any
  * `subscribe` member call nested inside another call. A bare `subscribe()`
- * call — whose member access wraps an implicit receiver — is never
+ * call (whose member access wraps an implicit receiver) is never
  * collected: without a receiver it may well be a business action on the
  * component. A `subscribe` that is only read, never called, is never
  * collected either.
@@ -111,8 +111,8 @@ class SubscribeCallDetector extends RecursiveAstVisitor {
    * (an observable, `this`, ...) makes the call a member call worth
    * flagging. Because the probe answers only for the outermost dispatch,
    * the callee itself must be the `subscribe` member access: a `subscribe`
-   * that is merely read — `stream.subscribe?.other()` or
-   * `factory(stream.subscribe)()` — is never reported.
+   * that is merely read, `stream.subscribe?.other()` or
+   * `factory(stream.subscribe)()`, is never reported.
    */
   private inspectCall(ast: Call | SafeCall): void {
     this.probe.reset();

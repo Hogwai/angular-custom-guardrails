@@ -38,7 +38,7 @@ for (const file of fs.readdirSync(validDir).filter((f) => f.endsWith('.html'))) 
 
 for (const file of fs.readdirSync(invalidDir).filter((f) => f.endsWith('.html'))) {
   // Each invalid fixture expects exactly one report, always on the explicit
-  // empty ng-template — never on an implicit structural wrapper.
+  // empty ng-template, never on an implicit structural wrapper.
   invalidFixtureCodes.push({
     code: fs.readFileSync(path.join(invalidDir, file), 'utf-8'),
     errors: [{ messageId: 'uselessEmptyNgTemplate' }],

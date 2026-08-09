@@ -39,7 +39,7 @@ with `async` are always valid.
 
 Two occurrences are duplicates when their pipe input expressions
 (`BindingPipe.exp`) are equivalent. Equivalence is computed from the source
-text of the input expression span only — never from the whole pipe span — so
+text of the input expression span only, never from the whole pipe span, so
 the spacing around `| async` and the pipe arguments are irrelevant:
 
 ```html
@@ -85,8 +85,8 @@ The rule has no configuration: it always inspects every `async` pipe.
 
 ## Detection
 
-The template parser exposes every template AST node — including `BindingPipe`
-expression nodes and the embedded-view container nodes — to ESLint listeners,
+The template parser exposes every template AST node (including `BindingPipe`
+expression nodes and the embedded-view container nodes) to ESLint listeners,
 so the rule is driven purely by listener dispatch. Source spans are read
 through plain property access (numeric offsets for expression spans, offset
 locations for template spans); the rule never relies on `constructor.name`

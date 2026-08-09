@@ -169,7 +169,7 @@ function getChildrenBounds(
  * async as ..."`) avoids the double subscription.
  *
  * Equivalence: two occurrences are duplicates when their input expressions
- * (`BindingPipe.exp`) are equivalent — compared by source text with balanced
+ * (`BindingPipe.exp`) are equivalent: compared by source text with balanced
  * outer parentheses removed and whitespace outside string literals ignored.
  * The pipe arguments and the spacing around `| async` never matter.
  *

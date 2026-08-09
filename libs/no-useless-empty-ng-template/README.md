@@ -17,7 +17,7 @@ is reported only when **all** of the following hold:
   no plain attribute (`foo="bar"`), no bound input (`[input]="..."`), no
   bound output (`(output)="..."`) and no structural directive
   (`*directive`);
-- every child is insignificant — only whitespace and line breaks, which
+- every child is insignificant: only whitespace and line breaks, which
   count as no content at all.
 
 ```html
